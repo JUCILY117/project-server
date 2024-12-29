@@ -1,0 +1,4 @@
+Flask==2.2.3
+pymongo==4.1.1
+cloudinary==1.30.0
+python-dotenv==0.21.0

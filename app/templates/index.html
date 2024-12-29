@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aayumats - Add Project</title>
+  <link rel="icon" href="https://i.ibb.co/tLHRSGF/artworks-rbt-CJUZGY6hg-F0ao-a-WH2-JQ-t500x500-modified.png" type="image/x-icon">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="form-container">
+    <!-- Login Form -->
+    <div id="login-container">
+      <h1>Admin Login</h1>
+      <form id="login-form">
+        <div class="input-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" required>
+        </div>
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+
+    <!-- Add Project Form -->
+    <div id="project-container" style="display: none;">
+      <h1>Add New Project</h1>
+      <form id="project-form" enctype="multipart/form-data">
+        <div class="input-group">
+          <label for="title">Project Title</label>
+          <input type="text" id="title" name="title" required>
+        </div>
+        <div class="input-group">
+          <label for="description">Description</label>
+          <textarea id="description" name="description" required></textarea>
+        </div>
+        <div class="input-group">
+          <label for="github_url">GitHub URL</label>
+          <input type="url" id="github_url" name="github_url" placeholder="https://github.com/your-repo">
+        </div>
+        <div class="input-group">
+          <label for="website_url">Website URL</label>
+          <input type="url" id="website_url" name="website_url" placeholder="https://your-website.com">
+        </div>
+        <div class="input-group">
+          <label for="screenshot">Screenshot</label>
+          <input type="file" id="screenshot" name="screenshot" accept="image/*" required>
+        </div>
+        <button type="submit">Add Project</button>
+      </form>
+    </div>
+
+    <!-- Response Message -->
+    <div id="response"></div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
