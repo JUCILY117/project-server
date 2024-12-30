@@ -50,7 +50,9 @@ def login():
         return jsonify({"error": "Username and password are required"}), 400
 
     user = users_collection.find_one({"username": username})
-    if not user or not check_password_hash(user["password"], password):
+    
+    # Change: Ensure that the user's password is hashed, and verify the hash correctly.
+    if not user or not check_password_hash(user["password"], password):  # Check password hash
         return jsonify({"error": "Invalid username or password"}), 401
 
     token = jwt.encode({
@@ -105,8 +107,7 @@ def get_projects():
     try:
         projects = list(projects_collection.find())
         for project in projects:
-            project['_id'] = str(project['_id'])
+            project['_id'] = str(project['_id'])  # Change: Convert ObjectId to string
         return jsonify({"projects": projects}), 200
     except Exception as e:
         return jsonify({"error": f"Failed to fetch projects: {str(e)}"}), 500
-
