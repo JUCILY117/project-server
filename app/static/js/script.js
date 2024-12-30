@@ -6,9 +6,10 @@ document.getElementById('login-form').addEventListener('submit', async function 
       username: document.getElementById('username').value,
       password: document.getElementById('password').value,
     };
+    const baseURL = window.location.origin;
   
     try {
-      const response = await fetch('http://localhost:5000/login', {
+      const response = await fetch(`${baseURL}/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -20,7 +21,7 @@ document.getElementById('login-form').addEventListener('submit', async function 
       const responseElement = document.getElementById('response');
   
       if (result.message) {
-        localStorage.setItem('authToken', result.token); // Store token in localStorage
+        localStorage.setItem('authToken', result.token);
         document.getElementById('login-container').style.display = 'none';
         document.getElementById('project-container').style.display = 'block';
       } else {
@@ -34,8 +35,7 @@ document.getElementById('login-form').addEventListener('submit', async function 
       responseElement.classList.add('error');
     }
   });
-  
-  // Add Project Form Submission
+
   document.getElementById('project-form').addEventListener('submit', async function (event) {
     event.preventDefault();
   
@@ -54,10 +54,10 @@ document.getElementById('login-form').addEventListener('submit', async function 
         return;
       }
   
-      const response = await fetch('http://localhost:5000/add-project', {
+      const response = await fetch(`${baseURL}/add-project`, {
         method: 'POST',
         headers: {
-          Authorization: token, // Pass the token in the headers
+          Authorization: token,
         },
         body: formData,
       });
@@ -83,7 +83,6 @@ document.getElementById('login-form').addEventListener('submit', async function 
     }
   });
   
-  // Check if Authenticated on Load
   document.addEventListener('DOMContentLoaded', () => {
     const token = localStorage.getItem('authToken');
     if (token) {
