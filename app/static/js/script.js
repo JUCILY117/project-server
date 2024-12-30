@@ -38,7 +38,9 @@ document.getElementById('login-form').addEventListener('submit', async function 
 
   document.getElementById('project-form').addEventListener('submit', async function (event) {
     event.preventDefault();
-  
+
+    const baseURL = window.location.origin;
+    
     const formData = new FormData();
     formData.append('title', document.getElementById('title').value);
     formData.append('description', document.getElementById('description').value);
