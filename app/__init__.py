@@ -4,6 +4,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from .config import Config
 from .routes import main
 import requests
+import pytz
 
 def ping_server():
     try:
@@ -19,7 +20,9 @@ def create_app():
 
     app.register_blueprint(main)
 
-    scheduler = BackgroundScheduler(daemon=True)
+    timezone = pytz.timezone("UTC")
+
+    scheduler = BackgroundScheduler(timezone=timezone, daemon=True)
     scheduler.add_job(ping_server, 'interval', minutes=5)
     scheduler.start()
 
