@@ -9,17 +9,23 @@ function decodeToken(token) {
 }
 
 function isTokenExpired(token) {
-  const decoded = decodeToken(token);
-  if (!decoded || !decoded.exp) return true;
-
-  const currentTime = Math.floor(Date.now() / 1000);
-  return currentTime > decoded.exp;
+  const decodedToken = decodeJwt(token);
+  const currentTime = Date.now() / 1000;
+  return decodedToken.exp < currentTime;
 }
+
+function decodeJwt(token) {
+  const payload = token.split('.')[1];
+  const decoded = atob(payload);
+  return JSON.parse(decoded);
+}
+
 
 function logout() {
   localStorage.removeItem('authToken');
   alert('Your session has expired. Please log in again.');
-  window.location.reload();
+  document.getElementById('project-container').style.display = 'none';
+  document.getElementById('login-container').style.display = 'block';
 }
 
 document.addEventListener('DOMContentLoaded', () => {
