@@ -1,2 +1,14 @@
 .env
 add_user.py
+# Python bytecode files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+venv/
+
+# Other common files to ignore
+*.log
+*.db
+*.sqlite3

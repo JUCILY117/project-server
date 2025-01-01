@@ -3,12 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aayumats - Add Project</title>
+  <title>Admin Panel - Aayumats</title>
   <link rel="icon" href="https://i.ibb.co/tLHRSGF/artworks-rbt-CJUZGY6hg-F0ao-a-WH2-JQ-t500x500-modified.png" type="image/x-icon">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  <div class="form-container">
+  <div class="admin-container">
+
+    <button id="toggle-section" class="toggle-btn" onclick="toggleSection()">Switch to Manage Projects</button>
+    
     <div id="login-container">
       <h1>Admin Login</h1>
       <form id="login-form">
@@ -22,6 +25,7 @@
         </div>
         <button type="submit">Login</button>
       </form>
+      <div id="login-response"></div>
     </div>
 
     <div id="project-container" style="display: none;">
@@ -49,10 +53,15 @@
         </div>
         <button type="submit">Add Project</button>
       </form>
+      <div id="project-response"></div>
     </div>
 
-    <div id="response"></div>
-  </div>
+      <div id="manage-projects-container" style="display: none;">
+        <h1>Manage Projects</h1>
+        <div id="project-list" class="project-list">
+        </div>
+        <div id="manage-response"></div>
+      </div>
 
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>

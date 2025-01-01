@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_cors import CORS
 import cloudinary.uploader
 from pymongo import MongoClient
+from bson import ObjectId
 import os
 import jwt
 import datetime
@@ -50,9 +51,7 @@ def login():
         return jsonify({"error": "Username and password are required"}), 400
 
     user = users_collection.find_one({"username": username})
-    
-    # Change: Ensure that the user's password is hashed, and verify the hash correctly.
-    if not user or not check_password_hash(user["password"], password):  # Check password hash
+    if not user or not check_password_hash(user["password"], password):
         return jsonify({"error": "Invalid username or password"}), 401
 
     token = jwt.encode({
@@ -107,7 +106,67 @@ def get_projects():
     try:
         projects = list(projects_collection.find())
         for project in projects:
-            project['_id'] = str(project['_id'])  # Change: Convert ObjectId to string
+            project['_id'] = str(project['_id'])
         return jsonify({"projects": projects}), 200
     except Exception as e:
         return jsonify({"error": f"Failed to fetch projects: {str(e)}"}), 500
+
+
+@main.route('/update-project/<project_id>', methods=['PUT'])
+@token_required
+def update_project(project_id):
+    data = request.form
+    title = data.get('title')
+    description = data.get('description')
+    github_url = data.get('github_url')
+    website_url = data.get('website_url')
+    new_image = request.files.get('image')
+
+    if not title and not description and not github_url and not website_url and not new_image:
+        return jsonify({"error": "No changes detected."}), 400
+
+    project_data = {}
+    if title:
+        project_data["title"] = title
+    if description:
+        project_data["description"] = description
+    if github_url:
+        project_data["github_url"] = github_url
+    if website_url:
+        project_data["website_url"] = website_url
+
+    if new_image:
+        try:
+            response = cloudinary.uploader.upload(new_image)
+            project_data["image_url"] = response['secure_url']
+        except Exception as e:
+            return jsonify({"error": f"Image upload failed: {str(e)}"}), 500
+
+    try:
+        result = projects_collection.update_one(
+            {"_id": ObjectId(project_id)},
+            {"$set": project_data}
+        )
+
+        if result.matched_count == 0:
+            return jsonify({"error": "Project not found"}), 404
+
+        return jsonify({"message": "Project updated successfully!"}), 200
+    except Exception as e:
+        return jsonify({"error": f"Failed to update project: {str(e)}"}), 500
+
+
+@main.route('/delete-project/<project_id>', methods=['DELETE'])
+@token_required
+def delete_project(project_id):
+    try:
+        project_id = ObjectId(project_id)
+
+        result = projects_collection.delete_one({"_id": project_id})
+
+        if result.deleted_count == 0:
+            return jsonify({"error": "Project not found"}), 404
+
+        return jsonify({"message": "Project deleted successfully!"}), 200
+    except Exception as e:
+        return jsonify({"error": f"Failed to delete project: {str(e)}"}), 500
