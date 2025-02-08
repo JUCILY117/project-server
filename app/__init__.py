@@ -23,7 +23,7 @@ def create_app():
     timezone = pytz.timezone("UTC")
 
     scheduler = BackgroundScheduler(timezone=timezone, daemon=True)
-    scheduler.add_job(ping_server, 'interval', minutes=5)
+    scheduler.add_job(ping_server, 'interval', minutes=10)
     scheduler.start()
 
     @app.route('/')
